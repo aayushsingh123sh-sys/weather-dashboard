@@ -1,0 +1,93 @@
+/* assets/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    background-color: #0b1121; /* Deep Black/Blue */
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* --- THE MASTER GRID LAYOUT --- */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 320px 1fr 280px; /* Sidebar, Middle, Right */
+    grid-template-rows: auto auto auto;     /* Weekly, Chart, Bottom */
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    
+    /* This map defines exactly where things go */
+    grid-template-areas:
+        "sidebar weekly weekly"
+        "sidebar chart sun"
+        "sidebar air rain";
+}
+
+/* --- ZONES --- */
+.area-sidebar { grid-area: sidebar; display: flex; flex-direction: column; gap: 20px; }
+.area-weekly  { grid-area: weekly; }
+.area-chart   { grid-area: chart; }
+.area-sun     { grid-area: sun; }
+.area-air     { grid-area: air; }
+.area-rain    { grid-area: rain; }
+
+/* --- CARD STYLES --- */
+.glass-card {
+    background: #1e293b; /* Solid dark grey/blue for contrast */
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* The Big Blue Card */
+.blue-card {
+    background: linear-gradient(145deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 25px;
+    padding: 25px;
+    color: white;
+    height: 320px; /* Fixed height for look */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+}
+
+/* Mini Grid for the bottom left stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.mini-card {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Weekly Strip */
+.weekly-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+.day-card {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    flex: 1;
+    min-width: 80px;
+}
+
+/* Text Styles */
+h2 { font-size: 1rem; color: #94a3b8; font-weight: 400; margin: 0 0 10px 0; }
+.value-text { font-size: 1.2rem; font-weight: 600; margin-top: 5px; }
+.label-text { font-size: 0.8rem; color: #94a3b8; }

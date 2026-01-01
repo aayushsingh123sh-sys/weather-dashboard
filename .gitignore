@@ -1,0 +1,11 @@
+# Ignore the secret key (CRITICAL!)
+.env
+
+# Ignore the heavy virtual environment folder
+venv/
+
+# Ignore compiled python files
+__pycache__/
+
+# Ignore Mac system files (just in case)
+.DS_Store
