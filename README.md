@@ -44,3 +44,4 @@ This project demonstrates modern UI principles (Glassmorphism & Bento Grid) comb
 
 ---
 Created by Aayush singh
+*Maintained by Aayush singh *
