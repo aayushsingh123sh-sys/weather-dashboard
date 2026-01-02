@@ -43,4 +43,4 @@ This project demonstrates modern UI principles (Glassmorphism & Bento Grid) comb
 * [ ] Add historical weather data comparison.
 
 ---
-*Created by [Your Name]*
+Created by Aayush singh
