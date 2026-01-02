@@ -4,7 +4,7 @@ A production-grade real-time weather application built with **Python Dash** and 
 This project demonstrates modern UI principles (Glassmorphism & Bento Grid) combined with robust backend data processing.
 
 ![Dashboard Preview](assets/dashboard-preview.png)
-*(Note: You can upload a screenshot later to make this look even better!)*
+
 
 ## 🚀 Key Features
 * **Real-Time Data Pipeline:** Fetches live weather, humidity, wind, and visibility data via REST API.
