@@ -7,10 +7,8 @@ import traceback
 
 app = dash.Dash(__name__)
 
-# --- LAYOUT ---
 app.layout = html.Div(children=[
     
-    # 1. HEADER & SEARCH
     html.Div(style={'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center', 'marginBottom': '20px'}, children=[
         html.H1("Weather Dashboard", style={'color': 'white', 'fontSize': '1.5rem', 'marginLeft': '20px'}),
         html.Div([
@@ -21,12 +19,9 @@ app.layout = html.Div(children=[
         ])
     ]),
 
-    # 2. MASTER GRID
     html.Div(className='dashboard-container', children=[
         
-        # ZONE 1: SIDEBAR (Blue Card + Stats)
         html.Div(className='area-sidebar', children=[
-            # Blue Card
             html.Div(className='blue-card', children=[
                 html.Div([
                     html.H2(id='city-name', style={'color': 'white', 'opacity': '0.9', 'margin': '0'}), 
@@ -39,7 +34,6 @@ app.layout = html.Div(children=[
                 html.Div("Last Updated: Just now", style={'opacity': '0.6', 'fontSize': '0.8rem'})
             ]),
 
-            # Mini Stats Grid
             html.Div(className='stats-grid', children=[
                 html.Div(className='mini-card', children=[html.P("💧 Humidity", className='label-text'), html.H3(id='val-hum', className='value-text')]),
                 html.Div(className='mini-card', children=[html.P("💨 Wind", className='label-text'), html.H3(id='val-wind', className='value-text')]),
@@ -48,16 +42,13 @@ app.layout = html.Div(children=[
             ])
         ]),
 
-        # ZONE 2: WEEKLY STRIP
         html.Div(className='area-weekly', id='weekly-strip'),
 
-        # ZONE 3: CHART
         html.Div(className='area-chart glass-card', children=[
             html.H2("Temperature Forecast (24h)"),
             dcc.Graph(id='main-chart', config={'displayModeBar': False}, style={'height': '200px'})
         ]),
 
-        # ZONE 4: SUNRISE/SET
         html.Div(className='area-sun glass-card', style={'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center'}, children=[
             html.P("Sunrise & Sunset", style={'color': '#94a3b8', 'marginBottom': '20px'}),
             html.Div([html.P("🌅 Sunrise"), html.H3(id='val-sunrise', style={'color': '#fbbf24'})]),
@@ -65,23 +56,19 @@ app.layout = html.Div(children=[
             html.Div([html.P("🌇 Sunset"), html.H3(id='val-sunset', style={'color': '#f87171'})])
         ]),
 
-        # ZONE 5: AIR QUALITY (Updated Layout)
         html.Div(className='area-air glass-card', children=[
             html.H2("Air Quality Overview"),
             html.Div(style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'space-between', 'height': '100%'}, children=[
                 
-                # Left: The Circle Badge
                 html.Div(style={'textAlign': 'center'}, children=[
                     html.Div(id='aqi-badge', style={'width': '80px', 'height': '80px', 'borderRadius': '50%', 'border': '4px solid #22c55e', 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'fontSize': '2rem', 'fontWeight': 'bold'}, children="?"),
                     html.P(id='aqi-text', style={'marginTop': '10px', 'color': '#22c55e'})
                 ]),
 
-                # Right: The 2x3 Grid of Pollutants
                 html.Div(id='pollutants-grid', style={'display': 'grid', 'gridTemplateColumns': '1fr 1fr', 'gap': '15px', 'width': '60%'})
             ])
         ]),
 
-        # ZONE 6: RAIN
         html.Div(className='area-rain glass-card', children=[
             html.H2("Chances of Rain"),
             html.Div([html.P("Tonight: 10%"), html.Div(style={'height': '6px', 'background': '#334155', 'borderRadius': '3px'}, children=html.Div(style={'width': '10%', 'height': '100%', 'background': '#3b82f6', 'borderRadius': '3px'}))]),
@@ -89,16 +76,13 @@ app.layout = html.Div(children=[
         ])
     ]),
 
-    # ERROR MESSAGE (Hidden unless needed)
     html.Div(id='error-log', style={'color': 'red', 'textAlign': 'center', 'marginTop': '20px'})
 ])
 
-# --- HELPER: Returns a colored dot + value for the AQI grid ---
 def create_pollutant_card(label, value):
-    # Simple color logic
-    color = "#22c55e" # Green
-    if value > 100: color = "#eab308" # Yellow
-    if value > 200: color = "#ef4444" # Red
+    color = "#22c55e" 
+    if value > 100: color = "#eab308" 
+    if value > 200: color = "#ef4444" 
     
     return html.Div(style={'display': 'flex', 'alignItems': 'center'}, children=[
         html.Div(style={'width': '8px', 'height': '8px', 'borderRadius': '50%', 'backgroundColor': color, 'marginRight': '10px'}),
@@ -108,7 +92,6 @@ def create_pollutant_card(label, value):
         ])
     ])
 
-# --- CALLBACK ---
 @app.callback(
     [Output('city-name', 'children'), Output('temp-main', 'children'), Output('condition-main', 'children'),
      Output('val-hum', 'children'), Output('val-wind', 'children'), Output('val-vis', 'children'), Output('val-press', 'children'),
@@ -122,14 +105,12 @@ def update_dashboard(n, city):
     if not city: city = "Bangalore"
     
     try:
-        # 1. Fetch Data
         w = get_weather(city)
         c_data, d_data = get_forecast(city)
         
         if "error" in w:
             return ["Error"] * 14 + [f"API Error: {w['error']}"]
 
-        # 2. Build Weekly Strip
         weekly_cards = []
         for day in d_data:
             weekly_cards.append(html.Div(className='day-card', children=[
@@ -138,7 +119,6 @@ def update_dashboard(n, city):
                 html.P(f"{day['temp']}°", style={'fontWeight': 'bold', 'margin': '0'})
             ]))
         
-        # 3. Build Chart
         if c_data:
             fig = px.line(pd.DataFrame(c_data), x='time', y='temp', markers=True)
             fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='white', 
@@ -148,11 +128,9 @@ def update_dashboard(n, city):
         else:
             fig = px.line(title="No Data")
 
-        # 4. Build AQI Grid (The new layout)
         aqi = get_aqi(w['lat'], w['lon'])
         comp = aqi.get('comp', {})
         
-        # We manually select the 6 key pollutants to match your image
         pollutant_ui = [
             create_pollutant_card("PM10", comp.get("pm10", 0)),
             create_pollutant_card("O3", comp.get("o3", 0)),
@@ -171,7 +149,7 @@ def update_dashboard(n, city):
             html.Div(className='weekly-container', children=weekly_cards), 
             fig, w['sunrise'], w['sunset'], 
             f"{aqi_val}", aqi_status, pollutant_ui,
-            "" # No Error
+            "" 
         )
 
     except Exception as e:
